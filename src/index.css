@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #06080d;
+    background-image: 
+      radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(244, 63, 94, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+      linear-gradient(to bottom, #07090f 0%, #040508 100%);
+    background-attachment: fixed;
+    color: #e2e8f0;
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 26, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(11, 17, 30, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(6, 182, 212, 0.03);
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Tactical HUD Accents */
+.hud-border {
+  position: relative;
+}
+.hud-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #38bdf8;
+  border-left: 2px solid #38bdf8;
+  pointer-events: none;
+}
+.hud-border::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #38bdf8;
+  border-right: 2px solid #38bdf8;
+  pointer-events: none;
+}
+
+/* Map specific tweaks */
+.leaflet-container {
+  background: #06080d !important;
+  font-family: inherit;
+  z-index: 10;
+  border-radius: 12px;
+}
+.leaflet-popup-content-wrapper {
+  background: rgba(10, 16, 28, 0.95) !important;
+  backdrop-filter: blur(14px) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.8), 0 0 15px rgba(6, 182, 212, 0.15) !important;
+}
+.leaflet-popup-tip {
+  background: rgba(10, 16, 28, 0.95) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+/* Animations */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.4), inset 0 0 8px rgba(6, 182, 212, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(6, 182, 212, 0.7), inset 0 0 14px rgba(6, 182, 212, 0.4);
+  }
+}
+.neon-glow {
+  animation: neon-pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse-danger {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(244, 63, 94, 0.7);
+  }
+}
+.glow-danger {
+  animation: pulse-danger 2s infinite ease-in-out;
+}
+
+/* Custom Tactical Slider Styling */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #06080d;
+  box-shadow: 0 0 12px #38bdf8, 0 0 4px #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 18px #38bdf8, 0 0 6px #38bdf8;
+}
+input[type=range]::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #06080d;
+  box-shadow: 0 0 12px #38bdf8;
+  cursor: pointer;
+}

@@ -1,0 +1,147 @@
+export interface DisasterTimelineStep {
+  id: string;
+  timeOffsetHours: number; // e.g. -12, -6, -2, 0, 6, 24, 48
+  label: string; // e.g. "T-12:00"
+  phaseTitle: string; // e.g. "Deep-Sea Cyclogenesis"
+  phaseBadge: string; // e.g. "APPROACH"
+  badgeColor: string; // e.g. "text-cyan-400 bg-cyan-950/60 border-cyan-500/40"
+  eyeCoordinates: [number, number];
+  windSpeedKmh: number;
+  pressureHpa: number;
+  surgeHeightMeters: number;
+  severedRoadIds: string[];
+  offlineSubstationIds: string[];
+  affectedPopulation: number;
+  tacticalDirective: string;
+  recommendedAction: string;
+  infrastructureStatus: string;
+}
+
+export const DISASTER_TIMELINE_STEPS: DisasterTimelineStep[] = [
+  {
+    id: 'step-t-minus-12',
+    timeOffsetHours: -12,
+    label: 'T-12:00 hrs',
+    phaseTitle: 'Deep-Sea Cyclonic Spiral',
+    phaseBadge: 'OFFSHORE SPIRAL',
+    badgeColor: 'text-cyan-300 bg-cyan-950/50 border-cyan-500/40',
+    eyeCoordinates: [18.70, 87.20],
+    windSpeedKmh: 165,
+    pressureHpa: 962,
+    surgeHeightMeters: 0.8,
+    severedRoadIds: [],
+    offlineSubstationIds: [],
+    affectedPopulation: 450000,
+    tacticalDirective: 'Gale Warning Phase: Recall all offshore trawlers to Paradip / Puri harbor. Open 48 multipurpose coastal cyclone shelters.',
+    recommendedAction: 'Pre-position high-clearance diesel fuel tankers at Gop Inland Transit Depot.',
+    infrastructureStatus: 'All regional electrical substations dry. Marine Drive 100% passable (+0.0m water).',
+  },
+  {
+    id: 'step-t-minus-6',
+    timeOffsetHours: -6,
+    label: 'T-06:00 hrs',
+    phaseTitle: 'Outer Rainbands Striking Coast',
+    phaseBadge: 'GALE WARNING',
+    badgeColor: 'text-amber-300 bg-amber-950/50 border-amber-500/40',
+    eyeCoordinates: [19.25, 86.65],
+    windSpeedKmh: 180,
+    pressureHpa: 952,
+    surgeHeightMeters: 1.8,
+    severedRoadIds: ['road-3'],
+    offlineSubstationIds: [],
+    affectedPopulation: 1100000,
+    tacticalDirective: 'Mandatory Evacuation Order: Transfer 180,000 citizens from thatch-roof coastal hamlets within 3km of high-tide line.',
+    recommendedAction: 'Place Konark Emergency Trauma Care on auxiliary generator backup readiness.',
+    infrastructureStatus: 'Astaranga coastal road experiencing saltwater splashover. Grid transformers operating normally.',
+  },
+  {
+    id: 'step-t-minus-2',
+    timeOffsetHours: -2,
+    label: 'T-02:00 hrs',
+    phaseTitle: 'Eyewall Approaching Landfall',
+    phaseBadge: 'PRE-LANDFALL PEAK',
+    badgeColor: 'text-rose-300 bg-rose-950/60 border-rose-500/40',
+    eyeCoordinates: [19.68, 86.12],
+    windSpeedKmh: 195,
+    pressureHpa: 942,
+    surgeHeightMeters: 3.4,
+    severedRoadIds: ['road-1', 'road-3'],
+    offlineSubstationIds: ['sub-2'],
+    affectedPopulation: 1850000,
+    tacticalDirective: 'DEFCON 2 Crisis Ops: Marine Drive severed (+2.0m saltwater breach). Reroute all logistics via Pipili-Gop High Ridge.',
+    recommendedAction: 'Deploy armed fuel escort along NH-316 to support isolated Konark ICU ward.',
+    infrastructureStatus: 'Chandrabhaga 132kV Substation tripped due to 1.6m surge inundation. 45,000 households blacked out.',
+  },
+  {
+    id: 'step-t-zero',
+    timeOffsetHours: 0,
+    label: 'T-00:00 hrs',
+    phaseTitle: 'Direct Eyewall Landfall Impact',
+    phaseBadge: 'EYEWALL LANDFALL',
+    badgeColor: 'text-red-400 bg-red-950/80 border-red-500/70',
+    eyeCoordinates: [19.82, 85.85],
+    windSpeedKmh: 215,
+    pressureHpa: 934,
+    surgeHeightMeters: 4.4,
+    severedRoadIds: ['road-1', 'road-3', 'road-4'],
+    offlineSubstationIds: ['sub-1', 'sub-2'],
+    affectedPopulation: 2200000,
+    tacticalDirective: 'Curfew & Total Lockdown: Extreme eyewall winds exceeding 200 km/h. Zero vehicular movement permitted outside high-ridge.',
+    recommendedAction: 'Engage hospital internal battery reserves. Stand by for immediate post-landfall air reconnaissance.',
+    infrastructureStatus: 'Puri & Konark coastal corridors submerged under 2.8m water. Secondary feeder tripping detected.',
+  },
+  {
+    id: 'step-t-plus-6',
+    timeOffsetHours: 6,
+    label: 'T+06:00 hrs',
+    phaseTitle: 'Inland Dissipation & Riverine Surge',
+    phaseBadge: 'SURGE RETENTION',
+    badgeColor: 'text-purple-300 bg-purple-950/60 border-purple-500/40',
+    eyeCoordinates: [20.15, 85.68],
+    windSpeedKmh: 155,
+    pressureHpa: 955,
+    surgeHeightMeters: 3.9,
+    severedRoadIds: ['road-1', 'road-3'],
+    offlineSubstationIds: ['sub-2'],
+    affectedPopulation: 1750000,
+    tacticalDirective: 'Amphibious Response Phase: Deploy Inflatable Rescue Boats (IRBs) into flooded Kushabhadra river basin.',
+    recommendedAction: 'Air-drop satellite communicators (SatPhones) and medical kits to cut-off shelter clusters.',
+    infrastructureStatus: 'High water stagnation. Coastal roads impassable; inland ridge remains 100% viable (+7.8m).',
+  },
+  {
+    id: 'step-t-plus-24',
+    timeOffsetHours: 24,
+    label: 'T+24:00 hrs',
+    phaseTitle: 'Golden-Hour Search & Rescue Phase',
+    phaseBadge: 'GOLDEN HOUR OPS',
+    badgeColor: 'text-emerald-300 bg-emerald-950/60 border-emerald-500/50',
+    eyeCoordinates: [20.75, 85.45],
+    windSpeedKmh: 80,
+    pressureHpa: 986,
+    surgeHeightMeters: 1.6,
+    severedRoadIds: ['road-1'],
+    offlineSubstationIds: ['sub-2'],
+    affectedPopulation: 950000,
+    tacticalDirective: 'Relief Convoy Surge: High Ridge Lifeline Corridor at maximum throughput. Dispatch heavy-duty mobile diesel generators.',
+    recommendedAction: 'Launch autonomous recon drone swarms to map residual structural failures and clear downed power gantries.',
+    infrastructureStatus: 'Tidal surge receding. Mud and debris clearing teams deployed along coastal arterials.',
+  },
+  {
+    id: 'step-t-plus-48',
+    timeOffsetHours: 48,
+    label: 'T+48:00 hrs',
+    phaseTitle: 'Grid Energization & Rehabilitation',
+    phaseBadge: 'RESTORATION',
+    badgeColor: 'text-blue-300 bg-blue-950/50 border-blue-500/40',
+    eyeCoordinates: [21.40, 85.20],
+    windSpeedKmh: 40,
+    pressureHpa: 1004,
+    surgeHeightMeters: 0.4,
+    severedRoadIds: [],
+    offlineSubstationIds: [],
+    affectedPopulation: 320000,
+    tacticalDirective: 'Public Health & Restoration: Distribute chlorine purification tablets; energize de-silted 132kV transformers.',
+    recommendedAction: 'Transition from incident command defense to permanent infrastructure rehabilitation.',
+    infrastructureStatus: 'All primary and secondary lifeline routes reopened. Grid power restored to 88% of district feeders.',
+  },
+];
