@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Banknote, 
@@ -18,7 +18,17 @@ import {
   ArrowRight,
   TrendingUp,
   Download,
-  Terminal
+  Terminal,
+  Radio,
+  Volume2,
+  VolumeX,
+  Database,
+  Lock,
+  GitBranch,
+  BarChart3,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { sound } from '../services/soundFx';
 
@@ -106,6 +116,82 @@ export const ParametricInsurancePanel: React.FC<ParametricInsurancePanelProps> =
   const [txHash, setTxHash] = useState<string>('');
   const [isDisbursing, setIsDisbursing] = useState<boolean>(false);
   const [copiedAdvisory, setCopiedAdvisory] = useState<boolean>(false);
+  const [showOracleLedger, setShowOracleLedger] = useState<boolean>(false);
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+
+  // Stop TTS on unmount
+  useEffect(() => {
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const playRadioChirp = () => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.13);
+    } catch {
+      sound.alert();
+    }
+  };
+
+  const handleSpeakAdvisory = () => {
+    if (!('speechSynthesis' in window)) {
+      alert("Tactical Voice Radio Synthesizer requires Web Speech API support.");
+      return;
+    }
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    playRadioChirp();
+
+    const rawText = getAdvisoryText();
+    const speechText = rawText
+      .replace(/[\[\]]/g, ' ')
+      .replace(/[#*_-]/g, ' ')
+      .replace(/₹/g, 'Rupees ')
+      .replace(/km\/h/g, ' kilometers per hour ')
+      .replace(/MSL/g, 'Mean Sea Level')
+      .replace(/DDMA/g, 'District Disaster Management Authority')
+      .replace(/NDRF/g, 'National Disaster Response Force')
+      .replace(/ODRAF/g, 'Odisha Disaster Rapid Action Force')
+      .replace(/\+/g, 'plus ');
+
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    utterance.rate = 1.05;
+    utterance.pitch = 0.95;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (selectedLanguage === 'OD') {
+      const odiaVoice = voices.find(v => v.lang.includes('or') || v.lang.includes('hi') || v.lang.includes('IN'));
+      if (odiaVoice) utterance.voice = odiaVoice;
+    } else {
+      const inVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('en-GB') || v.name.includes('India'));
+      if (inVoice) utterance.voice = inVoice;
+    }
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
+  };
 
   // Advisory Generator State
   const [selectedLanguage, setSelectedLanguage] = useState<'EN' | 'OD'>('EN');
@@ -361,6 +447,87 @@ A Category 4 Super Cyclone will make landfall in under 4 hours.
               )}
             </div>
 
+            {/* Decentralized Climate Oracle Proof-of-Reserve Drawer */}
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.08] space-y-2.5">
+              <button
+                onClick={() => {
+                  sound.click();
+                  setShowOracleLedger(!showOracleLedger);
+                }}
+                className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-200 hover:text-white transition"
+              >
+                <div className="flex items-center gap-2">
+                  <Database className="w-4 h-4 text-emerald-400" />
+                  <span>Decentralized Climate Oracle Network & Merkle Proof Ledger</span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    4/4 BFT Consensus
+                  </span>
+                </div>
+                {showOracleLedger ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+              </button>
+
+              {showOracleLedger && (
+                <div className="space-y-2 pt-2 border-t border-white/[0.06] text-[10px] animate-fadeIn">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300">
+                    <div className="p-2 rounded-lg bg-slate-900/90 border border-white/[0.04] space-y-1">
+                      <div className="flex items-center justify-between font-bold text-emerald-300">
+                        <span>Node 1: IMD Marine Buoy #23014</span>
+                        <span className="text-emerald-400">✓ Signed</span>
+                      </div>
+                      <div className="text-slate-400 text-[9px]">
+                        Payload: Wind 188 km/h, Surge +3.4m | Ed25519: <span className="font-mono text-slate-300">0x9f1a...ed25</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-slate-900/90 border border-white/[0.04] space-y-1">
+                      <div className="flex items-center justify-between font-bold text-emerald-300">
+                        <span>Node 2: ESA Copernicus Sentinel-1 C-SAR</span>
+                        <span className="text-emerald-400">✓ Signed</span>
+                      </div>
+                      <div className="text-slate-400 text-[9px]">
+                        Payload: σ⁰ &lt; -14dB, Inundation 54.2 km² | Sig: <span className="font-mono text-slate-300">0x4b7c...0892</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-slate-900/90 border border-white/[0.04] space-y-1">
+                      <div className="flex items-center justify-between font-bold text-emerald-300">
+                        <span>Node 3: NASA GPM IMERG Precipitation</span>
+                        <span className="text-emerald-400">✓ Signed</span>
+                      </div>
+                      <div className="text-slate-400 text-[9px]">
+                        Payload: 282mm / 24h upstream run-off | Sig: <span className="font-mono text-slate-300">0x228e...991a</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-slate-900/90 border border-white/[0.04] space-y-1">
+                      <div className="flex items-center justify-between font-bold text-emerald-300">
+                        <span>Node 4: OSDMA Coastal Gauge (Konark)</span>
+                        <span className="text-emerald-400">✓ Signed</span>
+                      </div>
+                      <div className="text-slate-400 text-[9px]">
+                        Payload: Tidal head +3.38m MSL | Sig: <span className="font-mono text-slate-300">0xaa01...55df</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-slate-900 border border-emerald-500/30 font-mono space-y-1 text-[9px]">
+                    <div className="flex items-center justify-between text-slate-400">
+                      <span>Smart Contract Vault:</span>
+                      <span className="text-cyan-300">0x7a3F09C2d4B29E11e4f9D8c12aE78546b30198Cd (ERC-4626)</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-400">
+                      <span>Merkle State Root:</span>
+                      <span className="text-slate-300">0xd892a7e283f5b7218...91cb42</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-400">
+                      <span>Settlement Latency:</span>
+                      <span className="text-emerald-400 font-bold">&lt; 840ms (Automated Pre-landfall Execution)</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Pre-Landfall Infrastructure Hardening Directives */}
             <div className="space-y-2 pt-2 border-t border-white/[0.08]">
               <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase">
@@ -397,6 +564,148 @@ A Category 4 Super Cyclone will make landfall in under 4 hours.
                   <p className="text-slate-300 text-[10px] leading-relaxed">
                     Deploy 12,000 geotextile sandbags on Kushabhadra River km 14.2 bend before high tide locks downstream river discharge.
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Compound Pluvial Discharge Hydrograph (Tidal Lock Analysis) */}
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-cyan-500/30 space-y-3 pt-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-cyan-400" />
+                  <span className="text-xs font-bold text-slate-100 uppercase tracking-wide">
+                    Compound Pluvial Discharge Hydrograph • Tidal Lock Convergence
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-500/40 px-2 py-0.5 rounded">
+                  Tidal Lock Window: T-02:00 to T+04:00
+                </span>
+              </div>
+
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Kushabhadra River basin discharge (<strong>42,000 cusecs</strong> from 280mm pluvial rainfall) converges with the 
+                <strong> +3.4m MSL</strong> coastal storm surge. Marine head exceeds the river bed gradient (0.002%), reducing gravity drainage to <strong>0%</strong> and causing severe backwater submersion of Gop & Ramachandi.
+              </p>
+
+              {/* SVG Chart */}
+              <div className="relative bg-slate-900/90 rounded-xl p-3 border border-white/[0.06] overflow-hidden">
+                <svg viewBox="0 0 520 180" className="w-full h-44 sm:h-48 text-xs select-none">
+                  <defs>
+                    <linearGradient id="dischargeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
+                    </linearGradient>
+                    <linearGradient id="surgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Grid Lines */}
+                  <line x1="50" y1="30" x2="490" y2="30" stroke="#334155" strokeDasharray="3 3" strokeWidth="0.8" />
+                  <line x1="50" y1="70" x2="490" y2="70" stroke="#334155" strokeDasharray="3 3" strokeWidth="0.8" />
+                  <line x1="50" y1="110" x2="490" y2="110" stroke="#334155" strokeDasharray="3 3" strokeWidth="0.8" />
+                  <line x1="50" y1="150" x2="490" y2="150" stroke="#475569" strokeWidth="1.2" />
+
+                  {/* Tidal Lock Shaded Region: Between T-02h (x=200) and T+04h (x=410) */}
+                  <rect x="200" y="20" width="210" height="130" fill="rgba(244, 63, 94, 0.12)" stroke="rgba(244, 63, 94, 0.4)" strokeDasharray="4 2" />
+                  <text x="305" y="32" fill="#fda4af" fontSize="9" fontWeight="bold" textAnchor="middle">
+                    ⚠️ TIDAL LOCK ZONE (ZERO GRAVITY OUTFLOW)
+                  </text>
+
+                  {/* River Discharge Area & Path */}
+                  <path
+                    d="M 50,150 L 50,135 Q 120,110 190,65 T 270,35 T 340,55 T 410,95 T 490,135 L 490,150 Z"
+                    fill="url(#dischargeGrad)"
+                  />
+                  <path
+                    d="M 50,135 Q 120,110 190,65 T 270,35 T 340,55 T 410,95 T 490,135"
+                    fill="none"
+                    stroke="#06b6d4"
+                    strokeWidth="2.5"
+                  />
+
+                  {/* Coastal Surge Area & Path */}
+                  <path
+                    d="M 50,150 L 50,145 Q 120,135 190,95 T 270,40 T 340,68 T 410,115 T 490,145 L 490,150 Z"
+                    fill="url(#surgeGrad)"
+                  />
+                  <path
+                    d="M 50,145 Q 120,135 190,95 T 270,40 T 340,68 T 410,115 T 490,145"
+                    fill="none"
+                    stroke="#f43f5e"
+                    strokeWidth="2.5"
+                  />
+
+                  {/* Key Markers */}
+                  <circle cx="270" cy="35" r="4" fill="#06b6d4" stroke="#fff" strokeWidth="1.5" />
+                  <text x="270" y="25" fill="#67e8f9" fontSize="9" fontWeight="bold" textAnchor="middle">
+                    42,000 cfs
+                  </text>
+
+                  <circle cx="270" cy="40" r="4" fill="#f43f5e" stroke="#fff" strokeWidth="1.5" />
+                  <text x="270" y="52" fill="#fda4af" fontSize="9" fontWeight="bold" textAnchor="middle">
+                    +3.4m Surge
+                  </text>
+
+                  {/* Landfall Vertical Axis */}
+                  <line x1="270" y1="20" x2="270" y2="150" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3 2" />
+                  <text x="270" y="165" fill="#fbbf24" fontSize="9" fontWeight="bold" textAnchor="middle">
+                    LANDFALL (T-00:00)
+                  </text>
+
+                  {/* X Axis Timestamps */}
+                  <text x="50" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T-06:00</text>
+                  <text x="125" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T-04:00</text>
+                  <text x="200" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T-02:00</text>
+                  <text x="340" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T+02:00</text>
+                  <text x="410" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T+04:00</text>
+                  <text x="490" y="165" fill="#94a3b8" fontSize="8" textAnchor="middle">T+06:00</text>
+
+                  {/* Y Axis Left (Discharge) */}
+                  <text x="46" y="32" fill="#06b6d4" fontSize="8" textAnchor="end">50k cfs</text>
+                  <text x="46" y="72" fill="#06b6d4" fontSize="8" textAnchor="end">35k cfs</text>
+                  <text x="46" y="112" fill="#06b6d4" fontSize="8" textAnchor="end">20k cfs</text>
+
+                  {/* Y Axis Right (Surge) */}
+                  <text x="495" y="32" fill="#f43f5e" fontSize="8" textAnchor="start">+4.0m</text>
+                  <text x="495" y="72" fill="#f43f5e" fontSize="8" textAnchor="start">+2.5m</text>
+                  <text x="495" y="112" fill="#f43f5e" fontSize="8" textAnchor="start">+1.0m</text>
+                </svg>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-[10px] border-t border-white/[0.06]">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" />
+                      <span className="text-slate-300">Upstream River Discharge (Cusecs)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                      <span className="text-slate-300">Marine Surge Head (Meters MSL)</span>
+                    </div>
+                  </div>
+                  <div className="text-rose-300 font-bold">
+                    Backwater Head: +1.6m above River Invert
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[10px]">
+                <div className="p-2 rounded-lg bg-slate-900 border border-white/[0.06]">
+                  <div className="text-slate-400">Peak Upstream Flow</div>
+                  <div className="text-xs font-bold text-cyan-300 mt-0.5">42,000 cusecs</div>
+                </div>
+                <div className="p-2 rounded-lg bg-slate-900 border border-white/[0.06]">
+                  <div className="text-slate-400">Estuary Tidal Head</div>
+                  <div className="text-xs font-bold text-rose-300 mt-0.5">+3.4 m MSL</div>
+                </div>
+                <div className="p-2 rounded-lg bg-slate-900 border border-white/[0.06]">
+                  <div className="text-slate-400">Gravity Drainage</div>
+                  <div className="text-xs font-bold text-rose-400 mt-0.5">0.0% (Reversed)</div>
+                </div>
+                <div className="p-2 rounded-lg bg-slate-900 border border-white/[0.06]">
+                  <div className="text-slate-400">Submerged Backwater</div>
+                  <div className="text-xs font-bold text-amber-300 mt-0.5">8.4 sq km</div>
                 </div>
               </div>
             </div>
@@ -577,6 +886,62 @@ A Category 4 Super Cyclone will make landfall in under 4 hours.
                 <Copy className="w-3 h-3" />
                 <span>{copiedAdvisory ? 'Copied!' : 'Copy'}</span>
               </button>
+            </div>
+
+            {/* Tactical Civil Defense Voice Radio Synthesizer */}
+            <div className="p-3 rounded-xl bg-slate-950/80 border border-purple-500/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-purple-300">
+                  <Radio className={`w-3.5 h-3.5 ${isSpeaking ? 'animate-pulse text-purple-400' : 'text-purple-400'}`} />
+                  <span>Tactical Voice Radio Synthesizer</span>
+                </div>
+                <span className="text-[9px] font-mono text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-500/30">
+                  VHF 156.800 MHz (CH 16)
+                </span>
+              </div>
+
+              {/* Active Voice Waveform Visualizer */}
+              {isSpeaking && (
+                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-purple-950/40 border border-purple-500/40 animate-fadeIn">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1" />
+                    <span className="text-[9px] font-bold text-rose-300 uppercase">
+                      ON AIR • BROADCASTING DISPATCH
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-0.5 h-4">
+                    <span className="w-1 bg-purple-400 rounded-full animate-bounce h-3" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1 bg-cyan-400 rounded-full animate-bounce h-4" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1 bg-emerald-400 rounded-full animate-bounce h-2" style={{ animationDelay: '300ms' }} />
+                    <span className="w-1 bg-purple-400 rounded-full animate-bounce h-4" style={{ animationDelay: '75ms' }} />
+                    <span className="w-1 bg-cyan-400 rounded-full animate-bounce h-3" style={{ animationDelay: '225ms' }} />
+                    <span className="w-1 bg-rose-400 rounded-full animate-bounce h-4" style={{ animationDelay: '120ms' }} />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSpeakAdvisory}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow ${
+                    isSpeaking
+                      ? 'bg-rose-600 hover:bg-rose-500 text-white animate-pulse'
+                      : 'bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40'
+                  }`}
+                >
+                  {isSpeaking ? (
+                    <>
+                      <VolumeX className="w-3.5 h-3.5" />
+                      <span>Silence Voice Broadcast</span>
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-3.5 h-3.5" />
+                      <span>🎙️ Broadcast Voice Radio Dispatch (TTS)</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="flex gap-2 text-xs">

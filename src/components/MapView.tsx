@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { InfrastructureNode, RoadSegment, RouteOption, PowerGridLine, SOSBeacon } from '../types/disaster';
-import { CYCLONE_TRACK, POWER_GRID_LINES, SOS_BEACONS, RAINFALL_PATHWAYS, COMPOUND_FLOOD_HOTSPOTS } from '../data/disasterData';
+import { CYCLONE_TRACK, POWER_GRID_LINES, SOS_BEACONS, RAINFALL_PATHWAYS, COMPOUND_FLOOD_HOTSPOTS, SVI_SECTORS } from '../data/disasterData';
 import { WindVortexCanvas } from './WindVortexCanvas';
-import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio, Droplets, AlertOctagon } from 'lucide-react';
+import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio, Droplets, AlertOctagon, Users } from 'lucide-react';
 
 interface MapViewProps {
   infrastructure: InfrastructureNode[];
@@ -39,6 +39,7 @@ export const MapView: React.FC<MapViewProps> = ({
     infraLayer: L.LayerGroup | null;
     routeLayer: L.LayerGroup | null;
     rainfallLayer: L.LayerGroup | null;
+    sviLayer: L.LayerGroup | null;
   }>({
     tileLayer: null,
     inundationLayer: null,
@@ -49,6 +50,7 @@ export const MapView: React.FC<MapViewProps> = ({
     infraLayer: null,
     routeLayer: null,
     rainfallLayer: null,
+    sviLayer: null,
   });
 
   const [mapMode, setMapMode] = useState<'satellite' | 'tactical-dark'>('satellite');
@@ -57,6 +59,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showGridLines, setShowGridLines] = useState<boolean>(true);
   const [showSOSBeacons, setShowSOSBeacons] = useState<boolean>(true);
   const [showRainfallPathways, setShowRainfallPathways] = useState<boolean>(true);
+  const [showSVI, setShowSVI] = useState<boolean>(true);
 
   // Initialize Map
   useEffect(() => {
@@ -78,6 +81,7 @@ export const MapView: React.FC<MapViewProps> = ({
     const routeGroup = L.layerGroup().addTo(map);
     const infraGroup = L.layerGroup().addTo(map);
     const rainfallGroup = L.layerGroup().addTo(map);
+    const sviGroup = L.layerGroup().addTo(map);
 
     layersRef.current.inundationLayer = inundationGroup;
     layersRef.current.roadsLayer = roadsGroup;
@@ -87,6 +91,7 @@ export const MapView: React.FC<MapViewProps> = ({
     layersRef.current.routeLayer = routeGroup;
     layersRef.current.infraLayer = infraGroup;
     layersRef.current.rainfallLayer = rainfallGroup;
+    layersRef.current.sviLayer = sviGroup;
 
     mapInstanceRef.current = map;
 
@@ -436,6 +441,66 @@ export const MapView: React.FC<MapViewProps> = ({
     });
   }, [showRainfallPathways, surgeHeight]);
 
+  // Render Social Vulnerability Index (SVI) Demographic Sectors
+  useEffect(() => {
+    const group = layersRef.current.sviLayer;
+    if (!group) return;
+    group.clearLayers();
+
+    if (!showSVI) return;
+
+    SVI_SECTORS.forEach((sec) => {
+      const isExtreme = sec.sviScore >= 0.85;
+      const isHigh = sec.sviScore >= 0.75 && sec.sviScore < 0.85;
+      const fillColor = isExtreme ? '#f43f5e' : isHigh ? '#f59e0b' : '#06b6d4';
+      const borderColor = isExtreme ? '#e11d48' : isHigh ? '#d97706' : '#0891b2';
+
+      const poly = L.polygon(sec.polygon, {
+        color: borderColor,
+        fillColor: fillColor,
+        fillOpacity: 0.35,
+        weight: 2,
+        dashArray: '4, 6',
+      }).addTo(group);
+
+      poly.bindPopup(`
+        <div class="p-2.5 font-mono text-xs text-slate-100 min-w-[240px]">
+          <div class="flex items-center justify-between border-b border-rose-700/60 pb-1 mb-1.5">
+            <span class="font-bold text-slate-100 text-sm">${sec.name}</span>
+            <span class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase ${
+              isExtreme ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+            }">
+              SVI ${(sec.sviScore * 100).toFixed(0)}%
+            </span>
+          </div>
+
+          <div class="space-y-1 text-[11px] text-slate-300 bg-slate-950/80 p-2 rounded-lg border border-white/[0.06]">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total Inhabitants:</span>
+              <span class="font-bold text-slate-100">${sec.population.toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Thatched Roof Housing:</span>
+              <span class="font-bold text-rose-400">${sec.thatchedRoofPct}%</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Elderly & Vulnerable:</span>
+              <span class="font-bold text-amber-300">${sec.elderlyPct}%</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Poverty Index:</span>
+              <span class="font-bold text-slate-200">${sec.povertyPct}%</span>
+            </div>
+          </div>
+
+          <div class="mt-2 p-1.5 rounded bg-rose-950/80 border border-rose-500/40 text-[10px] text-rose-200 leading-relaxed">
+            <strong>Evacuation Directive:</strong> ${sec.evacuationDirective}
+          </div>
+        </div>
+      `);
+    });
+  }, [showSVI]);
+
   // Render Infrastructure Nodes
   useEffect(() => {
     const group = layersRef.current.infraLayer;
@@ -628,6 +693,18 @@ export const MapView: React.FC<MapViewProps> = ({
             <Droplets className="w-3.5 h-3.5" />
             <span>Pluvial Runoff Pathways</span>
           </button>
+
+          <button
+            onClick={() => setShowSVI(!showSVI)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded transition ${
+              showSVI
+                ? 'bg-rose-600/30 border border-rose-500/50 text-rose-300'
+                : 'bg-slate-800/80 text-slate-400 hover:bg-slate-700'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Social Vulnerability (SVI)</span>
+          </button>
         </div>
 
         {/* Zoom & Compass Controls */}
@@ -683,6 +760,10 @@ export const MapView: React.FC<MapViewProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-600 border border-cyan-300"></span>
             <span>Tidal Lock Choke</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded bg-rose-500/50 border border-rose-400"></span>
+            <span>SVI Slum (78% Thatched)</span>
           </div>
         </div>
 

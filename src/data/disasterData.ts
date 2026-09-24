@@ -539,3 +539,88 @@ export const COMPOUND_FLOOD_HOTSPOTS: CompoundFloodHotspot[] = [
     tacticalAction: 'Seawater backflowing into agricultural freshwater canals; close sluice gate #04 immediately.',
   },
 ];
+
+export interface SVISector {
+  id: string;
+  name: string;
+  polygon: [number, number][];
+  sviScore: number; // 0.0 to 1.0 (CDC / NDMA Social Vulnerability Index)
+  population: number;
+  elderlyPct: number;
+  thatchedRoofPct: number;
+  povertyPct: number;
+  evacuationPriority: 'P1 - Immediate Evacuation' | 'P2 - High Priority' | 'P3 - Precautionary';
+  evacuationDirective: string;
+}
+
+export const SVI_SECTORS: SVISector[] = [
+  {
+    id: 'svi-1',
+    name: 'Pentakota Coastal Fisherfolk Slum',
+    polygon: [
+      [19.805, 85.835],
+      [19.815, 85.850],
+      [19.802, 85.865],
+      [19.795, 85.845],
+    ],
+    sviScore: 0.94,
+    population: 28500,
+    elderlyPct: 22.4,
+    thatchedRoofPct: 78.5,
+    povertyPct: 68.2,
+    evacuationPriority: 'P1 - Immediate Evacuation',
+    evacuationDirective: '78.5% non-pucka thatched housing; storm surge >2.0m will destroy dwellings. Dispatch 24 OSRTC buses immediately.',
+  },
+  {
+    id: 'svi-2',
+    name: 'Balukhand Lowland Casuarina Sector',
+    polygon: [
+      [19.825, 85.875],
+      [19.855, 85.910],
+      [19.835, 85.930],
+      [19.815, 85.895],
+    ],
+    sviScore: 0.81,
+    population: 14200,
+    elderlyPct: 18.6,
+    thatchedRoofPct: 54.0,
+    povertyPct: 51.4,
+    evacuationPriority: 'P2 - High Priority',
+    evacuationDirective: 'Low-elevation creek zone. Water backflow expected from Ramachandi tidal lock.',
+  },
+  {
+    id: 'svi-3',
+    name: 'Astaranga Mangrove Fishing Villages',
+    polygon: [
+      [19.965, 86.240],
+      [19.995, 86.275],
+      [19.970, 86.305],
+      [19.945, 86.260],
+    ],
+    sviScore: 0.89,
+    population: 32000,
+    elderlyPct: 24.1,
+    thatchedRoofPct: 71.2,
+    povertyPct: 62.8,
+    evacuationPriority: 'P1 - Immediate Evacuation',
+    evacuationDirective: 'Devi River estuary surge breach likely. Saturated shelter #12 requires immediate convoy diversion to Nimapada.',
+  },
+  {
+    id: 'svi-4',
+    name: 'Konark Urban Heritage Perimeter',
+    polygon: [
+      [19.875, 86.105],
+      [19.905, 86.130],
+      [19.890, 86.155],
+      [19.865, 86.125],
+    ],
+    sviScore: 0.62,
+    population: 19800,
+    elderlyPct: 15.2,
+    thatchedRoofPct: 28.0,
+    povertyPct: 34.5,
+    evacuationPriority: 'P3 - Precautionary',
+    evacuationDirective: 'Concrete structures viable; ground floor water logging expected. Move medical equipment to second floor.',
+  },
+];
+
