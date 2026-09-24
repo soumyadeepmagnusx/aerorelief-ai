@@ -23,6 +23,7 @@ import { AutoPilotTourModal } from './components/AutoPilotTourModal';
 import { SitrepModal } from './components/SitrepModal';
 import { AudioAlertModal } from './components/AudioAlertModal';
 import { DataSourceModal } from './components/DataSourceModal';
+import { ParametricInsurancePanel } from './components/ParametricInsurancePanel';
 import { PredictiveTimelineScrubber } from './components/PredictiveTimelineScrubber';
 import { DISASTER_TIMELINE_STEPS } from './data/timelineData';
 import { fetchLiveAtmosphericTelemetry, fetchLiveElevations } from './services/liveDataService';
@@ -399,6 +400,17 @@ export function App() {
                 <SatelliteOrbitTracker />
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'anticipatory' && (
+          <div className="max-w-6xl mx-auto">
+            <ParametricInsurancePanel
+              surgeHeight={surgeHeight}
+              windSpeedKmh={telemetry.windSpeedKmh}
+              inundatedAreaSqKm={inundatedAreaSqKm}
+              affectedPopulation={telemetry.affectedPopulation}
+            />
           </div>
         )}
 

@@ -116,14 +116,14 @@ export const GeminiDamageTriage: React.FC<GeminiDamageTriageProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm sm:text-base font-bold text-slate-100 uppercase tracking-wider">
-                  Google Gemini 2.5 Flash • Multimodal Damage Triage
+                  Google Gemini 3.7 Flash • Multimodal Damage Triage
                 </h2>
                 <span className="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-purple-500/20 text-purple-300 border border-purple-500/50">
-                  Official Model
+                  Google Gemini 3.7
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">
-                Zero-Shot Structural Damage Classification, Floodline Extrapolation & SAR Radar Correlation
+                Zero-Shot Structural Damage Classification, Parametric Insurance Trigger & Compound Rainfall Pathway Analysis
               </p>
             </div>
           </div>
@@ -135,7 +135,7 @@ export const GeminiDamageTriage: React.FC<GeminiDamageTriageProps> = ({
               ? 'bg-purple-950/80 border-purple-500/50 text-purple-300'
               : 'bg-slate-950/80 border-white/[0.08] text-slate-300'
           }`}>
-            Status: {apiKey && apiKey.trim().length > 10 ? 'LIVE GEMINI 2.5 API' : 'CALIBRATED xBD BENCHMARK'}
+            Status: {apiKey && apiKey.trim().length > 10 ? 'LIVE GEMINI 3.7 FLASH API' : 'CALIBRATED xBD + GEE BENCHMARK'}
           </span>
 
           <button
@@ -400,6 +400,62 @@ export const GeminiDamageTriage: React.FC<GeminiDamageTriageProps> = ({
                   </div>
                 </div>
 
+                {/* Anticipatory Action: Parametric Insurance & Hardening */}
+                {analysisResult.parametricInsuranceTrigger && (
+                  <div className="bg-emerald-950/30 border border-emerald-500/40 p-3 rounded-xl text-[11px] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-emerald-300 uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Parametric Insurance Liquidity Trigger:
+                      </span>
+                      <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        {analysisResult.parametricInsuranceTrigger.isTriggerMet ? 'TRIGGER VERIFIED' : 'PENDING'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>Physical Trigger Factor:</span>
+                      <span className="text-slate-100 font-bold text-right max-w-[65%]">
+                        {analysisResult.parametricInsuranceTrigger.primaryTriggerFactor}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>Automated Escrow Drawdown:</span>
+                      <span className="text-emerald-400 font-black">
+                        ₹{analysisResult.parametricInsuranceTrigger.recommendedPayoutCr} Crore (~$3.0M USD)
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Pre-Landfall Infrastructure Hardening Directives */}
+                {analysisResult.infrastructureHardeningDirectives && analysisResult.infrastructureHardeningDirectives.length > 0 && (
+                  <div className="bg-amber-950/20 border border-amber-500/30 p-3 rounded-xl text-[11px] space-y-1.5">
+                    <span className="font-bold text-amber-300 uppercase block">
+                      Pre-Landfall Infrastructure Hardening Directives:
+                    </span>
+                    <ul className="space-y-1 text-slate-300">
+                      {analysisResult.infrastructureHardeningDirectives.map((directive, i) => (
+                        <li key={i} className="flex items-start gap-1.5">
+                          <span className="text-amber-400 font-bold">🛡️</span>
+                          <span>{directive}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Compound Rainfall Pathway Hazard Callout */}
+                {analysisResult.compoundRainfallPathwayRisk && (
+                  <div className="bg-blue-950/20 border border-blue-500/30 p-3 rounded-xl text-[11px] text-blue-200">
+                    <span className="font-bold text-blue-300 uppercase block mb-1">
+                      Compound Pluvial + Surge Hazard:
+                    </span>
+                    <p className="text-slate-300 leading-relaxed">
+                      {analysisResult.compoundRainfallPathwayRisk}
+                    </p>
+                  </div>
+                )}
+
                 {/* Raw Model JSON & Transparency Toggle */}
                 <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between">
                   <button
@@ -412,7 +468,7 @@ export const GeminiDamageTriage: React.FC<GeminiDamageTriageProps> = ({
                     <span>{showRawJson ? 'Hide Raw Model Payload' : 'Inspect Raw Model JSON / Schema'}</span>
                   </button>
                   <span className="text-[9px] text-slate-400 font-mono">
-                    Model: {apiKey ? 'gemini-2.5-flash (Live)' : 'xBD Calibrated Baseline'}
+                    Model: {analysisResult.modelUsed || (apiKey ? 'gemini-3.7-flash (Live)' : 'xBD Calibrated Baseline')}
                   </span>
                 </div>
 

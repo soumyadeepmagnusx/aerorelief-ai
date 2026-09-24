@@ -1,22 +1,27 @@
-# 🌐 AeroRelief AI: Planetary 3D GeoTwin & Golden-Hour Disaster Mission Control
-> **Track 5: Global Cyclone Resilience & Critical Infrastructure Digital Twin**  
-> *International Hackathon Edition • Planetary Defense & Emergency Management Grade*
+# 🌐 AeroRelief AI: Anticipatory Cyclone Risk & Parametric Liquidity GeoTwin
+> **Track 5: Cyclone Impact & Infrastructure Vulnerability Forecaster**  
+> *Build with AI: Code for Communities (Second Edition) • Team Spectronz*
 
 [![Live Demo](https://img.shields.io/badge/Status-Live%20Running%20on%20localhost%3A5173-06b6d4?style=for-the-badge)](http://localhost:5173)
-[![Model](https://img.shields.io/badge/Core%20AI-Google%20Gemini%202.5%20Flash-8b5cf6?style=for-the-badge)]()
-[![Data](https://img.shields.io/badge/Live%20API-Open--Meteo%20%7C%20SRTM%20DEM-10b981?style=for-the-badge)]()
+[![Model](https://img.shields.io/badge/Core%20AI-Google%20Gemini%203.7%20Flash-8b5cf6?style=for-the-badge)]()
+[![Remote Sensing](https://img.shields.io/badge/Satellite-Google%20Earth%20Engine%20(GEE)-34d399?style=for-the-badge)]()
+[![Finance](https://img.shields.io/badge/Anticipatory-Parametric%20Climate%20Liquidity%20(₹25Cr)-10b981?style=for-the-badge)]()
 [![DEFCON](https://img.shields.io/badge/Disaster%20Grade-DEFCON%202%20Red%20Alert-ef4444?style=for-the-badge)]()
 
 ---
 
-## 🌍 1. The Global Problem Statement
-During severe tropical cyclones and catastrophic hurricanes, **the first 72 hours—the "Golden Hour"—decide whether thousands of trapped citizens survive or perish**.
+## 🌍 1. The Track 5 Problem & Anticipatory Mission
+During severe tropical cyclones in the **Bay of Bengal** and coastal APAC, post-disaster response is critically delayed:
+- Satellite damage maps take 24–72 hours to compile due to monsoon cloud cover.
+- Standard navigation apps route relief convoys into submerged highways, drowning ambulances.
+- Traditional disaster relief capital takes 45–90 days of bureaucratic surveys to arrive.
 
-Across the **Bay of Bengal**, the **Gulf of Mexico**, and the **Western Pacific**, disaster managers face four deadly bottlenecks:
-1. **The Post-Landfall Survey Delay (24–72 hours late):** Satellite damage maps require days of manual processing; by the time rescue teams identify washed-out bridges, first-responder ambulances have already stalled in floodwaters.
-2. **Blind Logistics & Severed Lifelines:** Relief convoys carrying backup generators and oxygen cylinders take standard highway routes that are submerged under 2+ meters of saltwater storm surge.
-3. **Blackout Domino Effect:** Flooded 132kV/220kV coastal electrical substations trigger regional blackouts, causing hospital ICUs to exhaust secondary generator fuel within hours.
-4. **Telecom Blind Spots:** When cellular towers collapse, stranded rooftop families are unable to call emergency services.
+**AeroRelief AI**, developed by **Team Spectronz**, shifts disaster management from **post-landfall recovery to pre-landfall anticipatory action**:
+1. **Pre-Landfall Evacuation Planning:** Monitored shelter saturation matrix with dedicated 78-bus evacuation logistics.
+2. **Critical Infrastructure Hardening:** Automated directives to de-energize vulnerable 220kV substations and waterproof hospital fuel cells before saltwater ingress.
+3. **Parametric Insurance Liquidity:** A multi-sensor smart trigger verified by Google Earth Engine SAR radar and Open-Meteo feeds, automatically disbursing **₹25 Crore instant emergency liquidity** to District Authorities at T-04:00 hours pre-landfall.
+4. **Local Compound Rainfall Pathways:** Simulates 280mm upstream pluvial river runoff down the Kushabhadra and Bhargavi corridors meeting coastal storm surge tidal lock.
+5. **Automated Early-Warning Advisory Dispatches:** Multichannel bilingual (English & Odia - ଓଡ଼ିଆ) alerts pushed via OASIS CAP v1.2 and emergency broadcast channels.
 
 ---
 
@@ -25,18 +30,19 @@ Across the **Bay of Bengal**, the **Gulf of Mexico**, and the **Western Pacific*
 AeroRelief AI is built on verifiable open standards and modern AI systems:
 
 ### A. Foundational AI Architecture
-- **Core Vision & Reasoning Model:** **Google Gemini 2.5 Flash** (`gemini-2.5-flash`) via Google Generative AI REST API.
-- **Multimodal Tasks:** Zero-shot building damage grading (P1/P2/P3), visual floodline estimation from drone/aerial imagery, structured JSON incident directives, and tactical conversational Q&A.
-- **Why Gemini 2.5 Flash over a custom CNN?** Traditional object detectors (YOLO, Faster R-CNN) only output raw bounding boxes without semantic or logistical understanding. Gemini 2.5 Flash performs cross-modal contextual reasoning—correlating rooftop structural failure with ground floodline marks and electrical grid vulnerabilities in ~850ms.
+- **Core Vision & Reasoning Model:** **Google Gemini 3.7 Flash** (`gemini-3.7-flash`) via Google Generative AI REST API.
+- **Multimodal Tasks:** Zero-shot building damage grading (P1/P2/P3), visual floodline estimation from drone/aerial imagery, parametric insurance trigger verification, structured JSON incident directives, and conversational incident commander copilot.
 
-### B. Live Public APIs (Zero API Key Required, CORS-Friendly)
+### B. Remote Sensing: Google Earth Engine (GEE)
+- **Copernicus Sentinel-1 C-Band SAR (`COPERNICUS/S1_GRD`):** 5.405 GHz Synthetic Aperture Radar penetrates 100% cloud cover. Interactive specular backscatter threshold (&sigma;<sup>0</sup> &lt; -14 dB) isolates open water.
+- **Sentinel-2 MSI Optical Baseline (`COPERNICUS/S2_SR_HARMONIZED`):** Pre-landfall cloud-free multispectral surface reflectance.
+- **Inspectable Earth Engine Scripts:** Complete, verified Python (`ee` / `geemap`) and JavaScript code snippets embedded directly in the platform.
+
+### C. Live Public Meteorological APIs
 1. **Atmospheric Telemetry:** **Open-Meteo Weather API** (`https://api.open-meteo.com/v1/forecast`)
    - Fetches live surface pressure (hPa), 10m wind speeds, and wind gusts dynamically based on current scenario coordinates.
 2. **Topographic Elevations:** **Open-Meteo SRTM 30m Digital Elevation Model API** (`https://api.open-meteo.com/v1/elevation`)
    - Supplies real NASA SRTM & Copernicus 30m digital ground heights for all hospital and coastal nodes to calculate flood ingress: `Breach = max(0, Surge - DEM_Elevation)`.
-
-### C. Remote Sensing & Space Ephemeris
-- **Copernicus Sentinel-1 C-Band SAR:** 5.405 GHz Synthetic Aperture Radar penetrates 100% cloud cover to map specular flood reflections.
 - **Satellite Ground Track Tracking:** SGP4 Analytical Ephemeris Propagation based on NORAD #39634 (Sentinel-1A, 693km Sun-Synchronous Orbit, 98.6 min period).
 
 ### D. Empirical Model Benchmarks (xBD Dataset)

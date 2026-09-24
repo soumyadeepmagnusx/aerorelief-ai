@@ -429,3 +429,113 @@ export const ACTIVE_DRONES: DroneFeedItem[] = [
     status: 'Returning to Base',
   },
 ];
+
+export interface RainfallPathway {
+  id: string;
+  name: string;
+  riverSystem: string;
+  coordinates: [number, number][];
+  flowRateCusecs: number;
+  precipitationMm: number;
+  flowDirection: string;
+  riskLevel: 'Extreme' | 'High' | 'Moderate';
+}
+
+export interface CompoundFloodHotspot {
+  id: string;
+  name: string;
+  coordinates: [number, number];
+  type: 'Tidal Lock Estuary' | 'Culvert Bottleneck' | 'Embankment Overtopping';
+  surgeBackflowM: number;
+  pluvialAccumulationM: number;
+  compoundDepthM: number;
+  maroonedVillages: number;
+  tacticalAction: string;
+}
+
+export const RAINFALL_PATHWAYS: RainfallPathway[] = [
+  {
+    id: 'rf-path-1',
+    name: 'Kushabhadra River Pluvial Pathway',
+    riverSystem: 'Mahanadi Delta - Kushabhadra Branch',
+    flowRateCusecs: 42000,
+    precipitationMm: 280,
+    flowDirection: 'North-West to South-East towards Ramachandi Mouth',
+    riskLevel: 'Extreme',
+    coordinates: [
+      [20.08, 85.92],
+      [20.04, 85.96],
+      [19.99, 86.01],
+      [19.94, 86.04],
+      [19.89, 86.05],
+      [19.865, 86.062],
+    ],
+  },
+  {
+    id: 'rf-path-2',
+    name: 'Bhargavi River Drainage Corridor',
+    riverSystem: 'Bhargavi Coastal Drainage System',
+    flowRateCusecs: 34000,
+    precipitationMm: 260,
+    flowDirection: 'North-West towards Balukhand & Mangala River',
+    riskLevel: 'High',
+    coordinates: [
+      [20.10, 85.83],
+      [20.02, 85.84],
+      [19.94, 85.85],
+      [19.88, 85.86],
+      [19.832, 85.864],
+    ],
+  },
+  {
+    id: 'rf-path-3',
+    name: 'Kadua Estuary Runoff Creek',
+    riverSystem: 'Kadua Inter-Tidal Stream',
+    flowRateCusecs: 16000,
+    precipitationMm: 240,
+    flowDirection: 'Inland Runoff towards Astaranga Coast',
+    riskLevel: 'High',
+    coordinates: [
+      [20.04, 86.15],
+      [20.01, 86.20],
+      [19.98, 86.24],
+      [19.96, 86.27],
+    ],
+  },
+];
+
+export const COMPOUND_FLOOD_HOTSPOTS: CompoundFloodHotspot[] = [
+  {
+    id: 'cp-1',
+    name: 'Ramachandi Tidal Lock Estuary',
+    coordinates: [19.865, 86.062],
+    type: 'Tidal Lock Estuary',
+    surgeBackflowM: 3.4,
+    pluvialAccumulationM: 1.8,
+    compoundDepthM: 2.8,
+    maroonedVillages: 14,
+    tacticalAction: 'Severe compound blockage: 3.4m storm surge prevents 42,000 cusecs Kushabhadra outflow. Pre-position 12 Inflatable Rescue Boats (IRBs).',
+  },
+  {
+    id: 'cp-2',
+    name: 'Gop Culvert Bridge Bottleneck (Km 18.2)',
+    coordinates: [19.988, 86.014],
+    type: 'Culvert Bottleneck',
+    surgeBackflowM: 1.2,
+    pluvialAccumulationM: 1.9,
+    compoundDepthM: 1.6,
+    maroonedVillages: 6,
+    tacticalAction: 'Culvert capacity exceeded by 240%. Geotextile sandbagging underway to prevent arterial road washout.',
+  },
+  {
+    id: 'cp-3',
+    name: 'Balukhand Creek Saline Ingress Point',
+    coordinates: [19.832, 85.864],
+    type: 'Embankment Overtopping',
+    surgeBackflowM: 2.9,
+    pluvialAccumulationM: 1.1,
+    compoundDepthM: 2.2,
+    maroonedVillages: 9,
+    tacticalAction: 'Seawater backflowing into agricultural freshwater canals; close sluice gate #04 immediately.',
+  },
+];

@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { InfrastructureNode, RoadSegment, RouteOption, PowerGridLine, SOSBeacon } from '../types/disaster';
-import { CYCLONE_TRACK, POWER_GRID_LINES, SOS_BEACONS } from '../data/disasterData';
+import { CYCLONE_TRACK, POWER_GRID_LINES, SOS_BEACONS, RAINFALL_PATHWAYS, COMPOUND_FLOOD_HOTSPOTS } from '../data/disasterData';
 import { WindVortexCanvas } from './WindVortexCanvas';
-import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio } from 'lucide-react';
+import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio, Droplets, AlertOctagon } from 'lucide-react';
 
 interface MapViewProps {
   infrastructure: InfrastructureNode[];
@@ -38,6 +38,7 @@ export const MapView: React.FC<MapViewProps> = ({
     sosLayer: L.LayerGroup | null;
     infraLayer: L.LayerGroup | null;
     routeLayer: L.LayerGroup | null;
+    rainfallLayer: L.LayerGroup | null;
   }>({
     tileLayer: null,
     inundationLayer: null,
@@ -47,6 +48,7 @@ export const MapView: React.FC<MapViewProps> = ({
     sosLayer: null,
     infraLayer: null,
     routeLayer: null,
+    rainfallLayer: null,
   });
 
   const [mapMode, setMapMode] = useState<'satellite' | 'tactical-dark'>('satellite');
@@ -54,6 +56,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showWindVortex, setShowWindVortex] = useState<boolean>(true);
   const [showGridLines, setShowGridLines] = useState<boolean>(true);
   const [showSOSBeacons, setShowSOSBeacons] = useState<boolean>(true);
+  const [showRainfallPathways, setShowRainfallPathways] = useState<boolean>(true);
 
   // Initialize Map
   useEffect(() => {
@@ -74,6 +77,7 @@ export const MapView: React.FC<MapViewProps> = ({
     const cycloneGroup = L.layerGroup().addTo(map);
     const routeGroup = L.layerGroup().addTo(map);
     const infraGroup = L.layerGroup().addTo(map);
+    const rainfallGroup = L.layerGroup().addTo(map);
 
     layersRef.current.inundationLayer = inundationGroup;
     layersRef.current.roadsLayer = roadsGroup;
@@ -82,6 +86,7 @@ export const MapView: React.FC<MapViewProps> = ({
     layersRef.current.cycloneLayer = cycloneGroup;
     layersRef.current.routeLayer = routeGroup;
     layersRef.current.infraLayer = infraGroup;
+    layersRef.current.rainfallLayer = rainfallGroup;
 
     mapInstanceRef.current = map;
 
@@ -332,6 +337,105 @@ export const MapView: React.FC<MapViewProps> = ({
     });
   }, [showSOSBeacons]);
 
+  // Render Pluvial Rainfall Pathways & Compound Flood Vectors
+  useEffect(() => {
+    const group = layersRef.current.rainfallLayer;
+    if (!group) return;
+    group.clearLayers();
+
+    if (!showRainfallPathways) return;
+
+    // Render Riverine Flow Vectors
+    RAINFALL_PATHWAYS.forEach((pathway) => {
+      // Glow back-line
+      L.polyline(pathway.coordinates, {
+        color: '#0284c7',
+        weight: 9,
+        opacity: 0.45,
+      }).addTo(group);
+
+      // Foreground dashed flow line
+      const flowLine = L.polyline(pathway.coordinates, {
+        color: '#38bdf8',
+        weight: 4,
+        opacity: 0.9,
+        dashArray: '8, 10',
+      }).addTo(group);
+
+      flowLine.bindPopup(`
+        <div class="p-2 font-mono text-xs text-slate-100 min-w-[210px]">
+          <div class="flex items-center gap-1.5 border-b border-cyan-700/50 pb-1 mb-1">
+            <span class="text-cyan-400 font-bold text-sm">🌊 ${pathway.name}</span>
+          </div>
+          <div class="space-y-1 text-[11px] text-slate-300">
+            <div>River System: <strong class="text-slate-100">${pathway.riverSystem}</strong></div>
+            <div>Upstream Pluvial Rainfall: <strong class="text-cyan-300">${pathway.precipitationMm} mm</strong></div>
+            <div>Runoff Discharge: <strong class="text-blue-300">${pathway.flowRateCusecs.toLocaleString()} cusecs</strong></div>
+            <div>Flow Vector: <span class="text-slate-400 text-[10px]">${pathway.flowDirection}</span></div>
+          </div>
+          <div class="mt-2 p-1.5 rounded bg-blue-950/70 border border-blue-600/40 text-[10px] text-blue-200">
+            <strong>Compound Hazard:</strong> High pluvial runoff converging directly toward coastal tidal lock.
+          </div>
+        </div>
+      `);
+    });
+
+    // Render Compound Flood Choke Points
+    COMPOUND_FLOOD_HOTSPOTS.forEach((choke) => {
+      const chokeIcon = L.divIcon({
+        className: 'choke-marker',
+        html: `
+          <div class="relative flex items-center justify-center cursor-pointer">
+            <div class="absolute -inset-1.5 rounded-full bg-blue-500 animate-ping opacity-60"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-800 text-white flex items-center justify-center text-xs font-black border-2 border-cyan-300 shadow-2xl">
+              🌊
+            </div>
+            <div class="absolute -bottom-1 -right-1 bg-amber-500 text-slate-950 font-black text-[8px] px-1 rounded-full border border-slate-950">
+              LOCK
+            </div>
+          </div>
+        `,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      });
+
+      const marker = L.marker(choke.coordinates, { icon: chokeIcon }).addTo(group);
+      marker.bindPopup(`
+        <div class="p-2.5 font-mono text-xs text-slate-100 min-w-[230px]">
+          <div class="flex items-center justify-between border-b border-blue-700/60 pb-1 mb-1.5">
+            <span class="font-bold text-cyan-300 text-sm">${choke.name}</span>
+            <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase">
+              ${choke.type}
+            </span>
+          </div>
+
+          <div class="space-y-1 text-[11px] text-slate-300 bg-slate-950/80 p-2 rounded-lg border border-white/[0.06]">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Storm Surge Ingress:</span>
+              <span class="font-bold text-rose-400">+${choke.surgeBackflowM}m</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Pluvial Rain Ponding:</span>
+              <span class="font-bold text-cyan-300">+${choke.pluvialAccumulationM}m</span>
+            </div>
+            <div class="flex justify-between border-t border-white/[0.06] pt-1">
+              <span class="text-slate-300 font-bold">Compound Flood Depth:</span>
+              <span class="font-black text-amber-300">+${choke.compoundDepthM}m</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Marooned Settlements:</span>
+              <span class="font-bold text-red-400">${choke.maroonedVillages} Villages</span>
+            </div>
+          </div>
+
+          <div class="mt-2 p-1.5 rounded bg-blue-950/80 border border-blue-500/40 text-[10px] text-blue-200 leading-relaxed">
+            ${choke.tacticalAction}
+          </div>
+        </div>
+      `);
+    });
+  }, [showRainfallPathways, surgeHeight]);
+
   // Render Infrastructure Nodes
   useEffect(() => {
     const group = layersRef.current.infraLayer;
@@ -512,6 +616,18 @@ export const MapView: React.FC<MapViewProps> = ({
             <Radio className="w-3.5 h-3.5" />
             <span>Citizen SOS Beacons</span>
           </button>
+
+          <button
+            onClick={() => setShowRainfallPathways(!showRainfallPathways)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded transition ${
+              showRainfallPathways
+                ? 'bg-blue-600/30 border border-blue-500/50 text-blue-300'
+                : 'bg-slate-800/80 text-slate-400 hover:bg-slate-700'
+            }`}
+          >
+            <Droplets className="w-3.5 h-3.5" />
+            <span>Pluvial Runoff Pathways</span>
+          </button>
         </div>
 
         {/* Zoom & Compass Controls */}
@@ -559,6 +675,14 @@ export const MapView: React.FC<MapViewProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 bg-amber-400"></span>
             <span>220kV Grid Line</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-0.5 bg-blue-400 border-b border-dashed border-cyan-300"></span>
+            <span>Pluvial Runoff (280mm)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 border border-cyan-300"></span>
+            <span>Tidal Lock Choke</span>
           </div>
         </div>
 

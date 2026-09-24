@@ -24,10 +24,11 @@ import {
   Play,
   ChevronDown,
   Database,
-  ShieldCheck
+  ShieldCheck,
+  Banknote
 } from 'lucide-react';
 
-export type ActiveTabType = 'map' | 'triage' | 'routing' | 'infrastructure' | 'satellite' | 'grid' | 'sos';
+export type ActiveTabType = 'map' | 'anticipatory' | 'routing' | 'triage' | 'infrastructure' | 'satellite' | 'grid' | 'sos';
 
 interface HeaderProps {
   telemetry: TelemetryData;
@@ -225,9 +226,9 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             {showKeyInput && (
               <div className="absolute right-0 mt-2 w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 p-3.5 rounded-xl shadow-2xl z-50 text-xs">
-                <p className="text-slate-200 mb-1 font-bold">Google Gemini 2.5 Flash Key</p>
+                <p className="text-slate-200 mb-1 font-bold">Google Gemini 3.7 Flash Key</p>
                 <p className="text-[11px] text-slate-400 mb-2.5 leading-relaxed">
-                  Enter key for live Gemini 2.5 Flash inference or leave empty for calibrated xBD benchmark model.
+                  Enter key for live Gemini 3.7 Flash multimodal inference or leave empty for calibrated xBD benchmark model.
                 </p>
                 <input
                   type="password"
@@ -374,6 +375,19 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Activity className="w-3.5 h-3.5 text-cyan-400" />
           <span>3D Digital Twin</span>
+        </button>
+
+        <button
+          onClick={() => handleTabClick('anticipatory')}
+          className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap font-mono ${
+            activeTab === 'anticipatory'
+              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/10'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+          }`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Anticipatory & Parametric Liquidity</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5"></span>
         </button>
 
         <button

@@ -22,44 +22,44 @@ export const AutoPilotTourModal: React.FC<AutoPilotTourModalProps> = ({
 
   const tourSteps = [
     {
-      title: 'Step 1: 4D Digital Twin & Predictive Landfall Scrubber',
+      title: 'Step 1: 4D Digital Twin & Compound Rainfall Pathways',
       tab: 'map' as ActiveTabType,
       action: () => onSetSurge(3.4),
       talkingPoint:
-        'When Super Cyclone AMRIT strikes, commanders cannot afford to guess. Using our 4D Predictive Timeline Scrubber below the map, watch as the cyclone eye glides across the Bay of Bengal, surge water rises from 0.8m to 4.4m, and Marine Drive is severed under 2.0m of seawater.',
-      highlight: 'Notice the dynamic cyclone eye track movement, 4D temporal slider, and wind vortex streamlines.',
+        'Commanders visualize compound disaster interactions: 280mm of upstream pluvial rainfall discharging down the Kushabhadra and Bhargavi rivers encounters a 3.4m coastal storm surge tidal lock, creating severe backwater flooding at vulnerable culvert choke points.',
+      highlight: 'Notice dynamic cyclone eye tracking, pluvial runoff flow vectors, and compound tidal-lock choke points.',
     },
     {
-      title: 'Step 2: Autonomous Lifeline Routing Engine',
+      title: 'Step 2: Anticipatory Action & Parametric Climate Insurance Liquidity',
+      tab: 'anticipatory' as ActiveTabType,
+      action: () => {},
+      talkingPoint:
+        'Instead of waiting 60 days for post-disaster bureaucracy, our multi-sensor parametric smart trigger automatically verifies physical criteria (Wind ≥ 185 km/h, Surge ≥ 3.0m, SAR flood area ≥ 50 sq km). It releases ₹25 Crore emergency liquidity to the District Disaster Management Authority 4 hours BEFORE landfall!',
+      highlight: 'Pre-landfall evacuation matrix, infrastructure pre-hardening directives, and automated bilingual municipal advisory dispatches.',
+    },
+    {
+      title: 'Step 3: Google Gemini 3.7 Flash Multimodal Damage AI',
+      tab: 'triage' as ActiveTabType,
+      action: () => {},
+      talkingPoint:
+        'In 850 milliseconds, Google Gemini 3.7 Flash performs zero-shot structural inspection—evaluating rooftop shear, estimating ground floodlines, verifying parametric insurance conditions, and outputting structured JSON rescue orders. Validated against the xBD satellite dataset with 86.1% macro F1.',
+      highlight: 'Zero-shot multimodal damage classification, parametric trigger validation, and tactical commander copilot.',
+    },
+    {
+      title: 'Step 4: Google Earth Engine (GEE) SAR Swipe Triage',
+      tab: 'satellite' as ActiveTabType,
+      action: () => {},
+      talkingPoint:
+        'Dual-pane radar change detection leverages Google Earth Engine (COPERNICUS/S1_GRD). Commanders tune the C-band SAR backscatter threshold (σ⁰ < -14 dB) to strip away cloud cover and automatically map 81.8 sq km of inundated delta and severed arterial bridges.',
+      highlight: 'Interactive swipe handle, C-band SAR backscatter threshold slider, and full GEE Python/JS script inspector.',
+    },
+    {
+      title: 'Step 5: Autonomous Lifeline Routing Engine',
       tab: 'routing' as ActiveTabType,
       action: () => {},
       talkingPoint:
         'Instead of sending emergency convoys down a submerged highway where ambulances will drown, our flood-penalized graph pathfinder automatically re-routes rescue convoys through the Pipili-Gop High Ridge at +7.8m elevation—guaranteeing 100% dry, safe passage.',
       highlight: 'Compares direct severed arterial vs high-ridge bypass with turn-by-turn NDRF waypoints.',
-    },
-    {
-      title: 'Step 3: Google Gemini 2.5 Flash Damage AI & xBD Benchmarks',
-      tab: 'triage' as ActiveTabType,
-      action: () => {},
-      talkingPoint:
-        'In 850 milliseconds, Google Gemini 2.5 Flash performs zero-shot structural inspection—evaluating rooftop shear, estimating ground floodlines, and outputting structured JSON rescue orders. Validated against the xBD satellite dataset with 86.1% macro F1.',
-      highlight: 'Zero-shot multimodal damage classification, xBD confusion matrix drawer, and tactical commander copilot.',
-    },
-    {
-      title: 'Step 4: Sentinel-1 SAR Split-Screen Swipe Triage',
-      tab: 'satellite' as ActiveTabType,
-      action: () => {},
-      talkingPoint:
-        'Dual-pane radar change detection allows commanders to drag between pre-event optical imagery and post-landfall Sentinel-1 C-Band SAR radar. It automatically calculates 68.4 sq km of inundated delta and 14 severed structures.',
-      highlight: 'Interactive swipe handle revealing open water backscatter reflection.',
-    },
-    {
-      title: 'Step 5: Cascading SCADA Blackout & Citizen SOS',
-      tab: 'grid' as ActiveTabType,
-      action: () => {},
-      talkingPoint:
-        'When the coastal 132kV switchyard floods, SCADA circuits trip, cutting power to 48,000 citizens and forcing hospitals into emergency Island Mode. Simultaneously, our LoRa mesh ingests rooftop citizen SOS pings, dispatching autonomous heavy-lift payload drones.',
-      highlight: 'Cascading power grid failure simulation and rooftop drone air-drop dispatch.',
     },
   ];
 
