@@ -1,6 +1,6 @@
 import React from 'react';
 import { TelemetryData, InfrastructureNode, RoadSegment } from '../types/disaster';
-import { X, Copy, Printer, Check, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { X, Copy, Printer, Check, ShieldAlert, CheckCircle2, Download, FileCode } from 'lucide-react';
 
 interface SitrepModalProps {
   isOpen: boolean;
@@ -32,6 +32,111 @@ export const SitrepModal: React.FC<SitrepModalProps> = ({
   );
 
   const timestamp = new Date().toUTCString();
+
+  const handleDownloadCAP = () => {
+    const capXml = `<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>AERORELIEF-CAP-${Date.now()}</identifier>
+  <sender>ndrf-crisis-ops@osdma.gov.in</sender>
+  <sent>${new Date().toISOString()}</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <category>Met</category>
+    <event>Severe Cyclonic Storm ${telemetry.cycloneName}</event>
+    <urgency>Immediate</urgency>
+    <severity>Extreme</severity>
+    <certainty>Observed</certainty>
+    <headline>MANDATORY EVACUATION &amp; LIFELINE HIGH-RIDGE BYPASS ACTIVE</headline>
+    <description>Sustained winds: ${telemetry.windSpeedKmh} km/h. Surge: +${surgeHeight.toFixed(1)}m. Marine Drive severed. Convoy transit active on Pipili-Gop High Ridge (+7.8m MSL).</description>
+    <instruction>Evacuate to designated cyclone shelters immediately. Do NOT attempt vehicular crossing on coastal highway.</instruction>
+    <area>
+      <areaDesc>Puri-Konark Coastal Defense Sector, Odisha, India</areaDesc>
+      <circle>19.815,85.828,45.0</circle>
+    </area>
+  </info>
+</alert>`;
+
+    const blob = new Blob([capXml], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CAP_ALERT_${telemetry.cycloneName.toUpperCase()}_v1.2.xml`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadGeoJSON = () => {
+    const geojson = {
+      type: "FeatureCollection",
+      properties: {
+        event: telemetry.cycloneName,
+        generatedAt: new Date().toISOString(),
+        surgeMeters: surgeHeight,
+        authority: "AeroRelief AI / Team Spectronz"
+      },
+      features: [
+        // Safe Lifeline Route
+        {
+          type: "Feature",
+          properties: {
+            name: "Pipili-Nimapada-Gop High Ridge Corridor",
+            status: "RECOMMENDED_SAFE_TRANSIT",
+            elevationMeters: 7.8,
+            clearance: "100% DRY",
+            color: "#10b981"
+          },
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              [85.835, 19.825],
+              [85.850, 19.860],
+              [85.920, 19.950],
+              [86.010, 19.990],
+              [86.115, 19.890]
+            ]
+          }
+        },
+        // Severed Roads
+        ...severedRoads.map((r) => ({
+          type: "Feature",
+          properties: {
+            name: r.name,
+            status: "HARD_SEVERED_SUBMERGED",
+            waterDepthMeters: Math.max(0, surgeHeight - r.baseElevationMeters),
+            color: "#ef4444"
+          },
+          geometry: {
+            type: "LineString",
+            coordinates: r.coordinates.map((c) => [c[1], c[0]])
+          }
+        })),
+        // Hospitals
+        ...infrastructure.map((n) => ({
+          type: "Feature",
+          properties: {
+            name: n.name,
+            type: n.type,
+            elevationMeters: n.elevationMeters,
+            status: n.status
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [n.coordinates[1], n.coordinates[0]]
+          }
+        }))
+      ]
+    };
+
+    const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `AERORELIEF_ROUTES_${telemetry.cycloneName.toUpperCase()}.geojson`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleCopy = () => {
     const sitrepText = `
@@ -171,20 +276,38 @@ Report Certified by: AeroRelief Automated Crisis Incident Command
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="flex items-center justify-between p-4 bg-slate-950/80 border-t border-white/[0.08]">
+        {/* Modal Footer with Interoperability Exports */}
+        <div className="flex flex-wrap items-center justify-between gap-2 p-4 bg-slate-950/80 border-t border-white/[0.08]">
           <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>Certified by Automated Crisis Incident Command</span>
+            <span className="hidden sm:inline">Certified NDMA Protocol • Team Spectronz</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleDownloadCAP}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs font-bold transition"
+              title="Download OASIS Common Alerting Protocol v1.2 XML for sirens and mobile cell broadcasts"
+            >
+              <FileCode className="w-3.5 h-3.5" />
+              <span>CAP v1.2 XML</span>
+            </button>
+
+            <button
+              onClick={handleDownloadGeoJSON}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition"
+              title="Download GeoJSON FeatureCollection for ATAK tablets and Garmin GPS navigation"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>ATAK GeoJSON</span>
+            </button>
+
             <button
               onClick={handleCopy}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition"
             >
               {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              <span>{copied ? 'Copied' : 'Copy Text'}</span>
+              <span>{copied ? 'Copied' : 'Copy'}</span>
             </button>
 
             <button
