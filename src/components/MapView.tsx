@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { InfrastructureNode, RoadSegment, RouteOption, PowerGridLine, SOSBeacon } from '../types/disaster';
+import { InfrastructureNode, RoadSegment, RouteOption } from '../types/disaster';
 import { CYCLONE_TRACK, POWER_GRID_LINES, SOS_BEACONS, RAINFALL_PATHWAYS, COMPOUND_FLOOD_HOTSPOTS, SVI_SECTORS } from '../data/disasterData';
 import { WindVortexCanvas } from './WindVortexCanvas';
-import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio, Droplets, AlertOctagon, Users } from 'lucide-react';
+import { Layers, Compass, ZoomIn, ZoomOut, Wind, Zap, Radio, Droplets, Users } from 'lucide-react';
 
 interface MapViewProps {
   infrastructure: InfrastructureNode[];

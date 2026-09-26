@@ -12,11 +12,7 @@ import {
   Eye, 
   RefreshCw,
   Activity,
-  Layers,
-  CheckCircle2,
-  BarChart3,
   GitCompare,
-  Zap,
   AlertCircle
 } from 'lucide-react';
 import { sound } from '../services/soundFx';

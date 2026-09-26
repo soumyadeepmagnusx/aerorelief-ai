@@ -1,5 +1,3 @@
-import { DamageAssessment } from '../types/disaster';
-
 export interface DamageAnalysisResult {
   damageGrade: 'P1 - Catastrophic' | 'P2 - Moderate' | 'P3 - Minor';
   structuralFailurePct: number;
@@ -25,9 +23,10 @@ export async function analyzeDroneDamageImage(
   locationContext: string,
   apiKey?: string
 ): Promise<DamageAnalysisResult> {
-  // If user provided a real Gemini API key, call Google Gemini 3.7 Flash (with fallback to gemini-2.5-flash)
+  // If user provided a real Gemini API key, call Google Gemini API (with zero-404 model resolution)
   if (apiKey && apiKey.trim().length > 10) {
-    const modelsToTry = ['gemini-3.7-flash', 'gemini-2.5-flash'];
+    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+
     
     for (const model of modelsToTry) {
       try {
@@ -159,7 +158,7 @@ export async function askIncidentCommander(
   apiKey?: string
 ): Promise<string> {
   if (apiKey && apiKey.trim().length > 10) {
-    const modelsToTry = ['gemini-3.7-flash', 'gemini-2.5-flash'];
+    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash'];
     for (const model of modelsToTry) {
       try {
         const response = await fetch(

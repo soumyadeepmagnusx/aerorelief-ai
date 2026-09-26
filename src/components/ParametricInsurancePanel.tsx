@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Banknote, 
-  AlertTriangle, 
   CheckCircle2, 
   Send, 
   Copy, 
@@ -10,23 +9,14 @@ import {
   Users, 
   Building2, 
   Zap, 
-  Layers, 
-  FileText, 
   Flame, 
   Anchor, 
-  Sparkles,
-  ArrowRight,
   TrendingUp,
-  Download,
-  Terminal,
   Radio,
   Volume2,
   VolumeX,
   Database,
-  Lock,
-  GitBranch,
   BarChart3,
-  ExternalLink,
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
@@ -163,7 +153,7 @@ export const ParametricInsurancePanel: React.FC<ParametricInsurancePanelProps> =
 
     const rawText = getAdvisoryText();
     const speechText = rawText
-      .replace(/[\[\]]/g, ' ')
+      .replace(/[[\]]/g, ' ')
       .replace(/[#*_-]/g, ' ')
       .replace(/₹/g, 'Rupees ')
       .replace(/km\/h/g, ' kilometers per hour ')

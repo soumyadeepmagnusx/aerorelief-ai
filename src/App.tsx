@@ -26,7 +26,7 @@ import { DataSourceModal } from './components/DataSourceModal';
 import { ParametricInsurancePanel } from './components/ParametricInsurancePanel';
 import { PredictiveTimelineScrubber } from './components/PredictiveTimelineScrubber';
 import { DISASTER_TIMELINE_STEPS } from './data/timelineData';
-import { fetchLiveAtmosphericTelemetry, fetchLiveElevations } from './services/liveDataService';
+import { fetchLiveAtmosphericTelemetry } from './services/liveDataService';
 import { Navigation, Building2, Sparkles, ExternalLink } from 'lucide-react';
 import { sound } from './services/soundFx';
 
@@ -34,7 +34,7 @@ export function App() {
   const [activeScenario, setActiveScenario] = useState<GlobalDisasterScenario>(GLOBAL_SCENARIOS[0]);
   const [telemetry, setTelemetry] = useState(INITIAL_TELEMETRY);
   const [surgeHeight, setSurgeHeight] = useState<number>(3.4);
-  const [infrastructure, setInfrastructure] = useState<InfrastructureNode[]>(INITIAL_INFRASTRUCTURE);
+  const [infrastructure] = useState<InfrastructureNode[]>(INITIAL_INFRASTRUCTURE);
   const [selectedDestination, setSelectedDestination] = useState<InfrastructureNode | null>(
     INITIAL_INFRASTRUCTURE[1] // Default: Konark Emergency Trauma Care
   );
