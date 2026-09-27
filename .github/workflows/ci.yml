@@ -1,0 +1,33 @@
+name: AeroRelief AI — CI Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-build-and-physics:
+    name: Lint, Typecheck, Physics Tests & Production Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Static Linter (Oxlint)
+        run: npm run lint
+
+      - name: Run Hydrodynamic Physics & A* Routing Unit Tests
+        run: npm test
+
+      - name: Build Production Bundle (TypeScript + Vite)
+        run: npm run build

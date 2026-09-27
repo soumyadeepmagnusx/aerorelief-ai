@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint src",
+    "test": "node --test tests/physicsAndRouting.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
