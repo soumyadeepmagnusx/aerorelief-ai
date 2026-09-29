@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AeroRelief AI — Official 3-Minute Demo Video (Team Spectronz)</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #07090e;
+      color: #f1f5f9;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      background: #0f172a;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #06b6d4;
+      color: #020617;
+    }
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.7);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    video {
+      width: 100%;
+      border-radius: 12px;
+      background: #000;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="title">AeroRelief AI — Official Hackathon Demo Video (02:55)</div>
+        <div class="subtitle">Team Spectronz • Build with AI: Code for Communities • Track 5: Cyclone Impact & Infrastructure Vulnerability Forecaster</div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-secondary" href="/">Launch Live 3D Prototype</a>
+        <a class="btn btn-primary" href="/AeroRelief_AI_Demo_Video_Team_Spectronz.mp4" download>Download MP4 Video</a>
+      </div>
+    </div>
+    <video controls autoplay playsinline preload="metadata">
+      <source src="/AeroRelief_AI_Demo_Video_Team_Spectronz.mp4" type="video/mp4" />
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+</body>
+</html>
