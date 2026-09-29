@@ -131,8 +131,8 @@ export function App() {
           if (atmo.isLive) {
             setTelemetry((prev) => ({
               ...prev,
-              windSpeedKmh: atmo.windSpeedKmh,
-              centralPressureHpa: atmo.surfacePressureHpa,
+              windSpeedKmh: Math.max(activeScenario.windSpeedKmh, atmo.windSpeedKmh),
+              centralPressureHpa: Math.min(activeScenario.pressureHpa, atmo.surfacePressureHpa),
             }));
             setIsTelemetryLive(true);
           } else {
